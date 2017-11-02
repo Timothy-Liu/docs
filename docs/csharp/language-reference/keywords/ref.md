@@ -106,7 +106,102 @@ Note that the `ref` keyword must be used in both places, or the compiler generat
 
 The following example defines a `Book` class that has two <xref:System.String> fields, `Title` and `Author`. It also defines a `BookCollection` class that includes a private array of `Book` objects. Individual book objects are returned by reference by calling its `GetBookByTitle` method.
 
-[!code-cs[csrefreturns](../../../../samples/snippets/csharp/language-reference/keywords/ref/ref-5.cs#1)]  
+[!code-cs[csrefreturns](../../../../samples/snippets/csharp/language-reference/keywords/ref/ref-5.cs#1)]
+
+```CS
+using System;
+
+namespace HelloRef
+{
+    class Book
+    {
+        public string Name { get; set; }
+    }
+
+    class Program
+    {
+        static int[] intArray = { 0, 1, 2 };
+        static Book[] bookArray = {
+                new Book{Name="AAA"},
+                new Book{Name="BBB"},
+                new Book{Name="CCC"}};
+
+
+        static void Main(string[] args)
+        {
+            Print();
+            var i = GetInt(1);
+            i = 100;
+            var b = GetBook(2);
+            b = new Book { Name = "XXX" };
+            Print();
+            ref var ii = ref RefGetInt(1);
+            ii = 100;
+            ref var bb = ref RefGetBook(1);
+            bb = new Book { Name = "XXX" };
+            Print();
+        }
+
+        static int GetInt(int index)
+        {
+            return intArray[index];
+        }
+
+        static Book GetBook(int index)
+        {
+            return bookArray[index];
+        }
+
+        static ref int RefGetInt(int index)
+        {
+            return ref intArray[index];
+        }
+
+        static ref Book RefGetBook(int index)
+        {
+            return ref bookArray[index];
+        }
+
+        static void Print()
+        {
+            foreach (var i in intArray)
+                System.Console.WriteLine(i);
+
+            foreach (var b in bookArray)
+                System.Console.WriteLine(b.Name);
+
+            System.Console.WriteLine("=========");
+        }
+    }
+}
+
+```
+
+The output is
+
+```
+0
+1
+2
+AAA
+BBB
+CCC
+=========
+0
+1
+2
+AAA
+BBB
+CCC
+=========
+0
+100
+2
+AAA
+XXX
+CCC
+=========
+```
 
 When the caller stores the value returned by the `GetBookByTitle` method as a ref local, changes that the caller makes to the return value are reflected in the `BookCollection` object, as the following example shows.
 
